@@ -19,6 +19,5 @@ ruby init.rb
 
 This was created with the intention to teach to code.
 
-### By:
 For any question you can contact [Sergio Maziano](mailto:sergio.maziano@gmail.com)
 [@smaziano](http://www.twitter.com/smaziano)

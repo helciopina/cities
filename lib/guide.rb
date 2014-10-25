@@ -24,14 +24,15 @@ class Guide
         until todo == 'exit'
           System.clear
 
-          puts "  Use: <add>, <find> or <exit>."
-          print "> "
+          System.actions
           todo = gets.chomp.downcase
           case todo
           when 'add'
             Database.add_city
           when 'find'
             Database.find_city
+          when 'delete'
+            Database.delete_city
           when 'exit'
             break
           else
@@ -44,5 +45,4 @@ class Guide
     end
     System.logout_message
   end
-
 end

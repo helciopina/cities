@@ -9,15 +9,15 @@ class Database
     # print "hostname: "
     # host = gets.chomp
 
-    print "username: "
-    @user = gets.chomp
+    print "Username: "
+    @user = gets.chomp.downcase
 
     # Get a password but hide it from view.
-    @password = ask("password(#{@user}): "){|p| p.echo = false}
+    @password = ask("Password(#{@user}): "){|p| p.echo = false}
 
     # You can uncomment the 2 lines below if you want to specify the system (database name).
     print "System: "
-    @database = gets.chomp
+    @database = gets.chomp.downcase
 
     # Connect to the database
     connected = Database.connect(@user, @password, @database)
@@ -31,6 +31,7 @@ class Database
 
   # method that disconnect from the database if connected
   def self.disconnect
+
     @session.close if @session
   end
 
@@ -48,16 +49,15 @@ class Database
 
     print "Country Code: "
     country_code = gets.chomp.upcase
-    print country_code
 
     print "District: "
     district_name = gets.chomp.capitalize
 
     print "Population: "
-    population = gets.chomp
+    population = gets.chomp.to_s
 
     # Execute the query
-    @session.query("INSERT INTO City (Name, CountryCode, District, Population) VALUES(\"#{city_name}\", \"#{country_code}\", \"#{district_name}\", \"#{population})\"")
+    @session.query("INSERT INTO City (Name, CountryCode, District, Population) VALUES(\"#{city_name}\", \"#{country_code}\", \"#{district_name}\", #{population})")
 
     #Disconnect from the database
     disconnect
@@ -84,6 +84,40 @@ class Database
       puts "Could not find a country with the code #{country_code}"
     end
     #Disconnect from the database
+    disconnect
+  end
+
+  def self.delete_city
+    # Connect to the database
+    connect(@user, @password, @database)
+
+    # Clear the screen
+    System.clear
+
+    # Ask the name of the city you want to delete
+    print "City Name: "
+    city_name = gets.chomp.capitalize
+
+    # Find the City, and adds it to city_cel array
+    city_sel = []
+    @session.query("SELECT * FROM City WHERE Name=\"#{city_name}\"").each do |city|
+      city_sel << city
+    end
+
+    # If the query turns out empty
+    if city_sel.empty?
+      puts "There's no such City in our database."
+    else
+      # Confirm if the user want really delete the City
+      puts "Are you sure you want to delete #{city_name} ? (y/n)"
+      response = gets.chomp.downcase
+      if response == "y"
+      # If the query has something then delete the city found.
+      @session.query("DELETE FROM City WHERE Name=\"#{city_name}\"")
+      puts "You have deleted #{@session.affected_rows} records."
+      end
+    end
+    # Disconnect from the database
     disconnect
   end
 
