@@ -109,7 +109,8 @@ class Database
       puts "There's no such City in our database."
     else
       # Confirm if the user want really delete the City
-      puts "Are you sure you want to delete #{city_name} ? (y/n)"
+      puts " Are you sure you want to delete #{city_name} ? (y/n)"
+      print"> "
       response = gets.chomp.downcase
       if response == "y"
       # If the query has something then delete the city found.
